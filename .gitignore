@@ -1,0 +1,16 @@
+﻿# VLC Demodulation System - .gitignore
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+.idea/
+*.iml
+results/
+*.json
+models/
+*.h5
+*.pth
+*.pt
+.DS_Store
+Thumbs.db
+*_bak_*/
