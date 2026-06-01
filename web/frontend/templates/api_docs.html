@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><title>API 文档 - VLC System</title>
+<style>
+  body { font-family: "Microsoft YaHei",sans-serif; max-width:900px; margin:40px auto; padding:20px; color:#333; }
+  h1 { color:#4a7aaa; } h2 { color:#333; border-bottom:2px solid #4a7aaa; padding-bottom:8px; margin-top:30px; }
+  code { background:#f5f5f5; padding:2px 6px; border-radius:3px; font-size:13px; }
+  .method { display:inline-block; padding:2px 8px; border-radius:4px; font-weight:700; font-size:12px; margin-right:8px; }
+  .post { background:#4caf50; color:#fff; } .get { background:#2196f3; color:#fff; }
+  .endpoint { margin:12px 0; padding:12px; background:#fafafa; border-radius:6px; border-left:3px solid #4a7aaa; }
+  .endpoint p { margin:4px 0; color:#666; font-size:14px; }
+</style></head>
+<body>
+<h1>VLC 智能解调系统 API</h1>
+<p>Base URL: <code>http://localhost:8000</code> | <a href="/docs">Swagger UI</a></p>
+
+<h2>仿真 API</h2>
+<div class="endpoint"><span class="method post">POST</span> <code>/api/simulate</code><p>运行单次 VLC 仿真</p></div>
+<div class="endpoint"><span class="method post">POST</span> <code>/api/ber_sweep</code><p>BER 扫描 (0-30 dB)</p></div>
+<div class="endpoint"><span class="method post">POST</span> <code>/api/train_ai</code><p>训练 AI 解调模型</p></div>
+<div class="endpoint"><span class="method get">GET</span> <code>/api/status</code><p>获取系统状态</p></div>
+
+<h2>图表 API</h2>
+<div class="endpoint"><span class="method get">GET</span> <code>/api/chart/waveform</code><p>信号波形图 (PNG base64)</p></div>
+<div class="endpoint"><span class="method get">GET</span> <code>/api/chart/constellation</code><p>星座图</p></div>
+<div class="endpoint"><span class="method get">GET</span> <code>/api/chart/eye</code><p>眼图</p></div>
+<div class="endpoint"><span class="method get">GET</span> <code>/api/chart/ber</code><p>BER 曲线</p></div>
+
+<h2>AI API (DeepSeek)</h2>
+<div class="endpoint"><span class="method post">POST</span> <code>/api/chat</code><p>AI 对话</p></div>
+<div class="endpoint"><span class="method post">POST</span> <code>/api/generate_report</code><p>生成分析报告</p></div>
+
+<h2>导出</h2>
+<div class="endpoint"><span class="method post">POST</span> <code>/api/export_pptx</code><p>导出 PPTX 文件</p></div>
+<div class="endpoint"><span class="method post">POST</span> <code>/api/language</code><p>切换语言 (en/zh)</p></div>
+</body>
+</html>

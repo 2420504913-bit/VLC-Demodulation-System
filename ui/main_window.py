@@ -60,6 +60,7 @@ class MplCanvas(FigureCanvas):
 
 def build_all_workflows_tab():
     """Build a single comprehensive Operation Guide tab with all 8 workflow steps."""
+    i18n = get_i18n()
     w = QWidget()
     layout = QVBoxLayout(w)
     layout.setContentsMargins(20, 16, 20, 16)
@@ -77,15 +78,11 @@ def build_all_workflows_tab():
     inner_layout.setSpacing(24)
 
     # Header
-    header = QLabel("VLC Transmission Pipeline \u2014 Operation Guide")
+    header = QLabel(i18n.tr("guide_header"))
     header.setStyleSheet("font-size: 22px; font-weight: 700; color: #1a1a1a; padding-bottom: 8px; background: transparent;")
     inner_layout.addWidget(header)
 
-    subtitle = QLabel(
-        "This guide describes each processing step in the Visible Light Communication (VLC) "
-        "signal chain, from data generation through OFDM modulation, optical transmission, "
-        "channel propagation, detection, demodulation, AI-based decoding, and final BER analysis."
-    )
+    subtitle = QLabel(i18n.tr("guide_subtitle"))
     subtitle.setWordWrap(True)
     subtitle.setStyleSheet("font-size: 16px; color: #666; line-height: 1.8; background: transparent;")
     inner_layout.addWidget(subtitle)
@@ -96,56 +93,17 @@ def build_all_workflows_tab():
     inner_layout.addWidget(sep)
 
     steps = [
-        ("01", "DATA", "Data Source Generation",
-         "Generates random binary data as the source for VLC transmission. "
-         "Supports configurable data lengths of 512, 1024, 2048, or 4096 bits, "
-         "selectable from the left control panel. Each bit stream is framed and "
-         "prepared for QPSK symbol mapping (2 bits per symbol). The generated data "
-         "serves as the ground truth for end-to-end BER evaluation."),
-        ("02", "OFDM", "OFDM Modulation",
-         "Orthogonal Frequency Division Multiplexing (OFDM) is employed to combat "
-         "inter-symbol interference in the optical channel. The system uses 64-point "
-         "FFT with 48 active data subcarriers and a cyclic prefix of 16 samples (25% "
-         "overhead). QPSK symbols are mapped to subcarriers, transformed via IFFT to "
-         "the time domain, and the cyclic prefix is prepended to each OFDM symbol."),
-        ("03", "LED", "LED Optical Transmission",
-         "Intensity modulation is used to drive a blue InGaN LED (450 nm wavelength, "
-         "100 mW optical power, 120-degree beam angle). The time-domain OFDM signal is "
-         "normalised and biased to operate within the LED linear region, ensuring minimal "
-         "non-linear distortion. The LED converts the electrical signal into visible light "
-         "for free-space propagation."),
-        ("04", "CH", "Optical Wireless Channel",
-         "The optical signal propagates through a free-space line-of-sight (LOS) channel. "
-         "Path loss, ambient light interference, shot noise, and thermal noise are modelled. "
-         "The signal-to-noise ratio (SNR) is configurable from 0 to 30 dB via the slider "
-         "control. Additive white Gaussian noise (AWGN) is applied to simulate realistic "
-         "channel conditions."),
-        ("05", "PD", "Photodetection (Receiver Front-End)",
-         "A PIN photodiode at the receiver converts the incoming optical signal back to an "
-         "electrical current. Key parameters include a responsivity of 0.5 A/W and an active "
-         "area of 10 mm\u00b2. Dark current noise (10 nA) is modelled as an additional noise "
-         "source. The received electrical signal is amplified and sampled for digital processing."),
-        ("06", "ODEM", "OFDM Demodulation",
-         "The received time-domain signal is processed to recover the transmitted symbols. "
-         "The cyclic prefix is removed, the FFT is performed to convert back to the frequency "
-         "domain, and data subcarriers are extracted. Baseline demodulation uses minimum-distance "
-         "(hard) decision. The output consists of noisy QPSK symbols ready for either AI-based "
-         "or conventional decoding."),
-        ("07", "AI", "AI-Powered Demodulation",
-         "A multi-layer perceptron (MLP) neural network provides intelligent symbol decoding. "
-         "The network architecture features 5 input features, two hidden layers with 64 and 32 "
-         "ReLU-activated neurons, and 4 output classes corresponding to QPSK constellation "
-         "points. Training uses 5000 noisy samples across various SNR conditions. Confidence "
-         "scores are reported per symbol for reliability assessment."),
-        ("08", "OUT", "Output & Performance Analysis",
-         "The demodulated bits are compared against the original transmitted bits to compute "
-         "the Bit Error Rate (BER). Four analysis views are available as tabs: Signal Waveform "
-         "(time-domain visualisation), Constellation Diagram (QPSK symbol clustering), Eye "
-         "Diagram (signal quality assessment), and BER Performance (error rate vs. SNR curve). "
-         "The BER Sweep function automates measurements across 0\u201324 dB SNR range."),
+        ("01", "DATA", "step_data", "step_data_desc"),
+        ("02", "OFDM", "step_ofdm", "step_ofdm_desc"),
+        ("03", "LED", "step_led", "step_led_desc"),
+        ("04", "CH", "step_ch", "step_ch_desc"),
+        ("05", "PD", "step_pd", "step_pd_desc"),
+        ("06", "ODEM", "step_demod", "step_demod_desc"),
+        ("07", "AI", "step_ai", "step_ai_desc"),
+        ("08", "OUT", "step_ber", "step_ber_desc"),
     ]
 
-    for num, key, title, desc in steps:
+    for num, key, title_key, desc_key in steps:
         card = QFrame()
         card.setStyleSheet("""
             QFrame {
@@ -170,13 +128,13 @@ def build_all_workflows_tab():
         hdr.addWidget(key_label)
         hdr.addSpacing(8)
 
-        title_label = QLabel(title)
+        title_label = QLabel(i18n.tr(title_key))
         title_label.setStyleSheet("font-size: 13px; font-weight: 600; color: #555; background: transparent;")
         hdr.addWidget(title_label)
         hdr.addStretch()
         card_layout.addLayout(hdr)
 
-        desc_label = QLabel(desc)
+        desc_label = QLabel(i18n.tr(desc_key))
         desc_label.setWordWrap(True)
         desc_label.setStyleSheet("font-size: 14px; color: #555; line-height: 1.8; background: transparent; padding-left: 2px;")
         card_layout.addWidget(desc_label)
@@ -187,7 +145,6 @@ def build_all_workflows_tab():
     scroll.setWidget(inner)
     layout.addWidget(scroll)
     return w
-
 
 
 class MainWindow(QMainWindow):

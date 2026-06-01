@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>VLC Intelligent Demodulation System</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+<nav class="topbar">
+  <div class="nav-brand"><span class="logo-icon">&#9670;</span><span class="logo-text">VLC Intelligent Demodulation System</span></div>
+  <div class="nav-links" id="mainNav">
+    <button class="nav-tab active" data-tab="dashboard">Dashboard</button>
+    <button class="nav-tab" data-tab="slides">PPT Slides</button>
+    <button class="nav-tab" data-tab="guide">Guide</button>
+    <button class="nav-tab" data-tab="logs">System Logs</button>
+    <button class="nav-tab" data-tab="settings">Settings</button>
+    <button class="nav-tab" data-tab="api">API Docs</button>
+  </div>
+</nav>
+
+<nav class="subnav" id="subNav">
+  <button class="sub-tab active" data-sub="waveform">Signal Waveform</button>
+  <button class="sub-tab" data-sub="constellation">Constellation</button>
+  <button class="sub-tab" data-sub="eye">Eye Diagram</button>
+  <button class="sub-tab" data-sub="ber">BER Curve</button>
+</nav>
+
+<div class="main-container">
+
+<!-- ═══ Dashboard ═══ -->
+<section id="tab-dashboard" class="tab-content active">
+<div class="dashboard-layout">
+  <aside class="sidebar">
+    <div class="card"><h3>Simulation Control</h3>
+      <div class="form-group"><label>Modulation</label><select id="modulation"><option>BPSK</option><option selected>QPSK</option><option>16-QAM</option><option>64-QAM</option></select></div>
+      <div class="form-group"><label>Data Length</label><select id="dataLength"><option>512</option><option selected>1024</option><option>2048</option><option>4096</option></select></div>
+      <div class="form-group"><label>SNR: <span id="snrValue">20</span> dB</label><input type="range" id="snr" min="0" max="30" value="20" oninput="E('snrValue').textContent=this.value"></div>
+      <div class="form-group"><label>AI Model</label><select id="aiModel"><option>MLP</option><option>CNN</option><option>LSTM</option></select></div>
+      <button onclick="runSimulation()" class="btn btn-primary">Run Simulation</button>
+      <button onclick="trainAI()" class="btn btn-secondary">Train AI</button>
+      <button onclick="runBERSweep()" class="btn btn-secondary">BER Sweep</button>
+      <button onclick="saveCurrentData()" class="btn btn-outline">Save Data</button>
+    </div>
+    <div class="card"><h3>Results</h3><div id="resultsDisplay"><p class="muted">Waiting for simulation...</p></div></div>
+    <div class="card"><h3>AI Assistant</h3><div id="chatBox" class="chat-box"></div><div class="chat-input-row"><input id="chatInput" placeholder="Ask about VLC..." onkeydown="if(event.key==='Enter')sendChat()"><button onclick="sendChat()" class="btn btn-sm">Send</button></div></div>
+  </aside>
+  <main class="content">
+    <div class="sub-panel active" id="panel-waveform"><div class="chart-card"><h4>Signal Waveform</h4><div id="chartWaveform" class="chart-big"></div></div></div>
+    <div class="sub-panel" id="panel-constellation"><div class="chart-card"><h4>Constellation Diagram</h4><div id="chartConstellation" class="chart-big"></div></div></div>
+    <div class="sub-panel" id="panel-eye"><div class="chart-card"><h4>Eye Diagram</h4><div id="chartEye" class="chart-big"></div></div></div>
+    <div class="sub-panel" id="panel-ber"><div class="chart-card"><h4>BER Curve</h4><div id="chartBER" class="chart-big"></div></div></div>
+    <div class="card" style="margin-top:10px"><div style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">AI Analysis Report</h3><button onclick="generateReport()" class="btn btn-sm">Generate Report</button></div><div id="reportContent" class="report-box"><p class="muted">Click to generate DeepSeek AI analysis...</p></div></div>
+  </main>
+</div>
+</section>
+
+<!-- ═══ PPT Slides ═══ -->
+<section id="tab-slides" class="tab-content">
+  <button class="slide-back" onclick="switchToTab('dashboard')">&#8592; Back</button>
+  <div class="slides-scroll" id="slidesScroll">
+    <div class="slide-snap cover"><div class="slide-inner"><p class="slide-label">Visible Light Communication</p><h1>VLC Demodulation System</h1><div class="divider"></div><p class="slide-sub">Visible Light Communication &middot; Intelligent Signal Processing</p><p class="slide-foot">Powered by OFDM + AI Deep Learning</p></div></div>
+    <div class="slide-snap"><div class="slide-inner"><h2>What is VLC?</h2><div class="hl-box"><p>Visible Light Communication (VLC) uses the 380-780nm visible light spectrum as an information carrier, overlaying high-speed modulation signals on LED lighting to achieve integrated illumination and communication.</p></div><div class="stat-row"><div class="stat"><span class="sn">10+ Gbps</span><span class="sl">Lab Peak Rate</span></div><div class="stat"><span class="sn">400+ THz</span><span class="sl">Available Spectrum</span></div><div class="stat"><span class="sn">0 EMI</span><span class="sl">Zero Interference</span></div></div></div></div>
+    <div class="slide-snap"><div class="slide-inner"><h2>History</h2><table><tr><th>Year</th><th>Milestone</th></tr><tr><td>1880</td><td>Bell invents the Photophone</td></tr><tr><td>2000</td><td>Japan proposes white LED indoor communication</td></tr><tr><td>2011</td><td>Harald Haas demonstrates Li-Fi at TED</td></tr><tr><td>2020</td><td>IEEE 802.11bb standardization begins</td></tr><tr><td>2024+</td><td>AI deep learning empowers VLC, 6G integration</td></tr></table></div></div>
+    <div class="slide-snap"><div class="slide-inner"><h2>How It Works</h2><div class="flow"><div class="fb">Data Gen</div><span>&#8594;</span><div class="fb">OFDM Mod</div><span>&#8594;</span><div class="fb">LED TX</div><span>&#8594;</span><div class="fb">Channel</div><span>&#8594;</span><div class="fb">Photo-Detect</div><span>&#8594;</span><div class="fb">OFDM Demod</div><span>&#8594;</span><div class="fb">AI Decode</div><span>&#8594;</span><div class="fb">BER Analysis</div></div><p class="slide-note">64-FFT / 48 Subcarriers / 16 CP / QPSK Mapping</p></div></div>
+    <div class="slide-snap"><div class="slide-inner"><h2>OFDM + AI</h2><div class="two-col"><div><h3>OFDM Parameters</h3><table><tr><td>FFT Size</td><td class="val">64</td></tr><tr><td>Data Subcarriers</td><td class="val">48</td></tr><tr><td>Cyclic Prefix</td><td class="val">16 (25%)</td></tr><tr><td>Modulation</td><td class="val">QPSK</td></tr></table></div><div><h3>MLP Network</h3><p class="arch">Input(5) &#8594; Dense(64)+ReLU &#8594; Dense(32)+ReLU &#8594; Dense(4)+Softmax</p><p class="slide-note">5000 samples trained across SNR conditions</p></div></div></div></div>
+    <div class="slide-snap"><div class="slide-inner"><h2>Applications</h2><div class="app-grid"><div class="app"><span class="ai">&#x1F3E0;</span><h4>Indoor Positioning</h4><p>cm-level accuracy</p></div><div class="app"><span class="ai">&#x1F697;</span><h4>V2X</h4><p>Low latency vehicle comms</p></div><div class="app"><span class="ai">&#x1F3E5;</span><h4>Healthcare</h4><p>Zero EMI for MRI rooms</p></div><div class="app"><span class="ai">&#x1F30A;</span><h4>Underwater</h4><p>Blue-green light penetration</p></div><div class="app"><span class="ai">&#x2708;</span><h4>Aviation</h4><p>Reading-light Internet</p></div><div class="app"><span class="ai">&#x1F3ED;</span><h4>Industry 4.0</h4><p>EM-sensitive environments</p></div></div></div></div>
+    <div class="slide-snap"><div class="slide-inner"><h2>Future &amp; Comparison</h2><div class="two-col"><div><h3>Trends</h3><ul><li>6G complementary technology</li><li>Micro-LED for higher bandwidth</li><li>MIMO-VLC spatial multiplexing</li><li>AI-Native end-to-end optimization</li></ul></div><div><table><tr><th></th><th>VLC</th><th>Wi-Fi 6</th><th>5G</th></tr><tr><td>Spectrum</td><td class="hi">400 THz</td><td>7 GHz</td><td>100 GHz</td></tr><tr><td>Rate</td><td>10+ Gbps</td><td>9.6</td><td>20</td></tr><tr><td>Security</td><td class="hi">Very High</td><td>Medium</td><td>High</td></tr></table></div></div></div></div>
+    <div class="slide-snap cover end"><div class="slide-inner"><h1>Thank You</h1><div class="divider"></div><p class="slide-sub">VLC Demodulation System</p><p class="slide-foot">Visible Light Communication &middot; AI Signal Processing</p></div></div>
+  </div>
+</section>
+
+<!-- ═══ Guide (JS-rendered, bilingual) ═══ -->
+<section id="tab-guide" class="tab-content"><div class="guide-container">
+  <div class="guide-hero"><h1>VLC System Operation Guide</h1><p>8 steps from data generation to BER analysis</p></div>
+  <div class="guide-steps" id="guideSteps"></div>
+</div></section>
+
+<!-- ═══ System Logs ═══ -->
+<section id="tab-logs" class="tab-content"><div class="logs-container">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+    <h2>System Logs</h2>
+    <div><button onclick="refreshLogs()" class="btn btn-sm">Refresh</button><button onclick="clearLogs()" class="btn btn-sm" style="margin-left:8px">Clear</button></div>
+  </div>
+  <div id="logsDisplay" class="logs-box"><p class="muted">Loading logs...</p></div>
+</div></section>
+
+<!-- ═══ Settings ═══ -->
+<section id="tab-settings" class="tab-content"><div class="settings-container">
+  <div class="card settings-card"><h2>Language</h2><div class="set-row"><span>Interface Language</span><div><button class="btn btn-sm lang-btn active" onclick="switchLang('en')" id="btnEn">English</button><button class="btn btn-sm lang-btn" onclick="switchLang('zh')" id="btnZh">中文</button></div></div></div>
+  <div class="card settings-card"><h2>Theme</h2><div class="set-row"><span>Color Scheme</span><div><button class="btn btn-sm theme-btn active" onclick="setTheme('light')" id="thmLight">Light</button><button class="btn btn-sm theme-btn" onclick="setTheme('dark')" id="thmDark">Dark</button></div></div><div class="set-row"><span>Accent</span><input type="color" id="accentColor" value="#4a7aaa" onchange="setAccent(this.value)"></div></div>
+  <div class="card settings-card"><h2>Font</h2><div class="set-row"><span>Size</span><div><button class="btn btn-sm font-btn active" onclick="setFontSize('medium')" id="fsMedium">Medium</button><button class="btn btn-sm font-btn" onclick="setFontSize('large')" id="fsLarge">Large</button></div></div></div>
+  <div class="card settings-card"><h2>Data Management</h2><p class="muted" style="margin-bottom:10px">Saved simulation records</p><div id="dataList" class="data-list"><p class="muted">No saved records</p></div><button onclick="refreshDataList()" class="btn btn-sm" style="margin-top:8px">Refresh</button></div>
+  <div class="card settings-card"><h2>Export</h2><p class="muted" style="margin-bottom:10px">Export current simulation results as PPTX</p><button onclick="exportPPTX()" class="btn btn-primary" style="width:auto;padding:8px 24px">Export PPTX</button></div>
+  <div class="card settings-card"><button onclick="saveAllSettings()" class="btn btn-primary" style="width:auto;padding:10px 40px">Save Settings</button><span id="settingsMsg" style="margin-left:16px;color:#4caf50;font-size:13px"></span></div>
+</div></section>
+
+<!-- ═══ API Docs (JS-rendered, bilingual) ═══ -->
+<section id="tab-api" class="tab-content"><div class="api-container" id="apiContainer">
+  <h1>VLC System API</h1><p>Base: <code>http://localhost:8000</code> | <a href="/docs" target="_blank">Swagger UI</a></p>
+</div></section>
+
+</div>
+
+<footer class="statusbar"><span id="statusText">&#x25CF; Ready</span><span id="apiStatus">API: Checking...</span></footer>
+
+<script src="/static/js/app.js"></script>
+</body>
+</html>

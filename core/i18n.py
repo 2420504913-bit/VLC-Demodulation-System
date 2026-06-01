@@ -153,6 +153,14 @@ _EN = {
     "step_demod": "OFDM Demodulation",
     "step_ai": "AI-Powered Decoding",
     "step_ber": "BER Analysis",
+    "step_data_desc": "Generates random binary data as the source for VLC transmission. Supports configurable data lengths of 512, 1024, 2048, or 4096 bits, selectable from the left control panel. Each bit stream is framed and prepared for QPSK symbol mapping. The generated data serves as the ground truth for end-to-end BER evaluation.",
+    "step_ofdm_desc": "Orthogonal Frequency Division Multiplexing is employed to combat inter-symbol interference in the optical channel. The system uses 64-point FFT with 48 active data subcarriers and a cyclic prefix of 16 samples. QPSK symbols are mapped to subcarriers, transformed via IFFT to the time domain, and the cyclic prefix is prepended to each OFDM symbol.",
+    "step_led_desc": "Intensity modulation is used to drive a blue InGaN LED with 450 nm wavelength, 100 mW optical power, and 120-degree beam angle. The time-domain OFDM signal is normalised and biased to operate within the LED linear region. The LED converts the electrical signal into visible light for free-space propagation.",
+    "step_ch_desc": "The optical signal propagates through a free-space line-of-sight channel. Path loss, ambient light interference, shot noise, and thermal noise are modelled. SNR is configurable from 0 to 30 dB via the slider control. AWGN is applied to simulate realistic channel conditions.",
+    "step_pd_desc": "A PIN photodiode at the receiver converts the incoming optical signal back to an electrical current. Key parameters include a responsivity of 0.5 A/W and an active area of 10 mm square. Dark current noise of 10 nA is modelled as an additional noise source. The received signal is amplified and sampled for digital processing.",
+    "step_demod_desc": "The received time-domain signal is processed to recover the transmitted symbols. The cyclic prefix is removed, FFT converts back to the frequency domain, and data subcarriers are extracted. Baseline demodulation uses minimum-distance decision. The output consists of noisy QPSK symbols ready for AI-based or conventional decoding.",
+    "step_ai_desc": "A multi-layer perceptron neural network provides intelligent symbol decoding. The network features 5 input features, two hidden layers with 64 and 32 ReLU neurons, and 4 output classes. Training uses 5000 noisy samples across various SNR conditions. Confidence scores are reported per symbol for reliability assessment.",
+    "step_ber_desc": "The demodulated bits are compared against the original transmitted bits to compute the Bit Error Rate. Four analysis views are available: Signal Waveform, Constellation Diagram, Eye Diagram, and BER Performance. The BER Sweep function automates measurements across 0 to 24 dB SNR range.",
 
     # Modulations
     'mod_bpsk': 'BPSK',
@@ -298,6 +306,14 @@ _ZH = {
     "step_demod": "OFDM \u89e3\u8c03",
     "step_ai": "AI \u667a\u80fd\u89e3\u7801",
     "step_ber": "BER \u8bef\u7801\u7387\u5206\u6790",
+    "step_data_desc": "生成随机二进制数据作为 VLC 传输的源数据。支持 512、1024、2048 或 4096 比特的可配置数据长度，可从左侧控制面板选择。每个比特流经过组帧处理后，准备进行 QPSK 符号映射。生成的数据作为端到端 BER 评估的真值参考。",
+    "step_ofdm_desc": "采用正交频分复用技术对抗光信道中的符号间干扰。系统使用 64 点 FFT、48 个活跃数据子载波，循环前缀为 16 个采样点。QPSK 符号映射到各子载波后，通过 IFFT 变换到时域，并为每个 OFDM 符号添加循环前缀。",
+    "step_led_desc": "使用强度调制驱动蓝色 InGaN LED，波长 450 nm、光功率 100 mW、波束角 120°。时域 OFDM 信号经归一化和偏置处理后工作在 LED 线性区域内。LED 将电信号转换为可见光进行自由空间传播。",
+    "step_ch_desc": "光信号通过自由空间视距信道传播。模型中考虑了路径损耗、环境光干扰、散粒噪声和热噪声。信噪比可通过滑块在 0 到 30 dB 范围内调节。叠加高斯白噪声以模拟真实信道条件。",
+    "step_pd_desc": "接收端使用 PIN 光电二极管将入射光信号转换回电流信号。关键参数包括响应度 0.5 A/W 和有效面积 10 mm²。暗电流噪声作为额外噪声源建模。接收到的电信号经放大和采样后进行数字处理。",
+    "step_demod_desc": "处理接收到的时域信号以恢复发射符号。去除循环前缀后执行 FFT 变换回频域，并提取数据子载波。基线解调采用最小距离判决。输出为含噪 QPSK 符号，可供 AI 解码或传统解码使用。",
+    "step_ai_desc": "多层感知器神经网络提供智能符号解码。网络架构包含 5 个输入特征、两个分别含 64 和 32 个 ReLU 激活神经元的隐藏层，以及对应 QPSK 星座点的 4 个输出类别。训练使用 5000 个不同 SNR 条件下的含噪样本。每个符号均报告置信度评分以评估可靠性。",
+    "step_ber_desc": "将解调比特与原始发射比特对比，计算误码率。提供四种分析视图：信号波形、星座图、眼图和 BER 性能曲线。BER 扫描功能可自动完成 0–24 dB SNR 范围的测量。",
 
     # Modulations
     'mod_bpsk': 'BPSK',

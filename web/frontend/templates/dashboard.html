@@ -1,0 +1,125 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VLC 智能解调系统</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+<!-- 顶部导航 -->
+<nav class="topbar">
+  <div class="nav-brand">
+    <span class="logo-icon">◆</span>
+    <span class="logo-text">VLC Intelligent Demodulation System</span>
+  </div>
+  <div class="nav-links">
+    <a href="/" class="nav-link active">📊 仪表盘</a>
+    <a href="/slides" class="nav-link">📽️ PPT 演示</a>
+    <a href="/docs" class="nav-link" target="_blank">📖 API 文档</a>
+    <button onclick="toggleLang()" class="btn-lang" id="btnLang">🌐 中文</button>
+  </div>
+</nav>
+
+<div class="main-container">
+  <!-- 左侧控制面板 -->
+  <aside class="sidebar">
+    <div class="card">
+      <h3>⚙️ 仿真控制</h3>
+      <div class="form-group">
+        <label>调制方式</label>
+        <select id="modulation">
+          <option value="BPSK">BPSK</option>
+          <option value="QPSK" selected>QPSK</option>
+          <option value="16-QAM">16-QAM</option>
+          <option value="64-QAM">64-QAM</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>数据长度 (bits)</label>
+        <select id="dataLength">
+          <option value="512">512</option>
+          <option value="1024" selected>1024</option>
+          <option value="2048">2048</option>
+          <option value="4096">4096</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>SNR: <span id="snrValue">20</span> dB</label>
+        <input type="range" id="snr" min="0" max="30" value="20" oninput="document.getElementById('snrValue').textContent=this.value">
+      </div>
+      <div class="form-group">
+        <label>AI 模型</label>
+        <select id="aiModel">
+          <option value="MLP" selected>MLP 神经网络</option>
+          <option value="CNN">CNN 卷积网络</option>
+          <option value="LSTM">LSTM 循环网络</option>
+        </select>
+      </div>
+      <button onclick="runSimulation()" class="btn btn-primary">▶ 运行仿真</button>
+      <button onclick="trainAI()" class="btn btn-secondary">🧠 训练 AI</button>
+      <button onclick="runBERSweep()" class="btn btn-secondary">📈 BER 扫描</button>
+      <button onclick="exportPPTX()" class="btn btn-outline">📥 导出 PPTX</button>
+    </div>
+
+    <div class="card">
+      <h3>📋 仿真结果</h3>
+      <div id="resultsDisplay">
+        <p class="muted">等待运行仿真...</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🤖 AI 助手 (DeepSeek)</h3>
+      <div id="chatBox" class="chat-box"></div>
+      <div class="chat-input-row">
+        <input type="text" id="chatInput" placeholder="询问 VLC 相关问题..." onkeydown="if(event.key==='Enter')sendChat()">
+        <button onclick="sendChat()" class="btn btn-sm">发送</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- 右侧图表区 -->
+  <main class="content">
+    <div class="chart-grid">
+      <div class="chart-card">
+        <h4>📶 信号波形</h4>
+        <div id="chartWaveform" class="chart-container"></div>
+      </div>
+      <div class="chart-card">
+        <h4>⭐ 星座图</h4>
+        <div id="chartConstellation" class="chart-container"></div>
+      </div>
+      <div class="chart-card">
+        <h4>👁️ 眼图</h4>
+        <div id="chartEye" class="chart-container"></div>
+      </div>
+      <div class="chart-card">
+        <h4>📉 BER 曲线</h4>
+        <div id="chartBER" class="chart-container"></div>
+      </div>
+    </div>
+
+    <!-- AI 报告区 -->
+    <div class="card" style="margin-top:16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <h3 style="margin:0;">📝 AI 分析报告</h3>
+        <button onclick="generateReport()" class="btn btn-sm">生成报告</button>
+      </div>
+      <div id="reportContent" class="report-box">
+        <p class="muted">点击"生成报告"使用 DeepSeek AI 分析仿真结果...</p>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- 状态栏 -->
+<footer class="statusbar">
+  <span id="statusText">● 就绪 - VLC 智能解调平台</span>
+  <span id="apiStatus">API: 检查中...</span>
+</footer>
+
+<script src="/static/js/dashboard.js"></script>
+</body>
+</html>
